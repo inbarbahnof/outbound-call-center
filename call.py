@@ -1,6 +1,3 @@
-# call.py
-from flask import Flask, request, Response
-from twilio.twiml.voice_response import VoiceResponse
 from twilio.rest import Client
 from dotenv import load_dotenv
 from urllib.parse import quote

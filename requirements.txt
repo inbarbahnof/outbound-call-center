@@ -1,0 +1,10 @@
+json
+os
+twilio.twiml.voice_response
+re
+word2number
+openai
+dotenv
+datetime
+twilio.rest
+urllib.parse
