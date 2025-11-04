@@ -1,10 +1,5 @@
-json
-os
-twilio.twiml.voice_response
-re
-word2number
+Flask
+python-dotenv
+twilio
 openai
-dotenv
-datetime
-twilio.rest
-urllib.parse
+word2number
