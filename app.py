@@ -63,7 +63,7 @@ def voice():
     slot_msg = ""
 
     if is_start:
-        slot_msg += "Hi! This is your AI assistant. Here are the available slots. "
+        slot_msg += "Hi! This is Inbar's AI assistant. Here are the available slots. "
         is_start = False
 
     for i, s in enumerate(options, start=1):
@@ -83,6 +83,7 @@ def voice():
     return Response(str(resp), mimetype="text/xml")
 
 
+@app.route("/process_speech", methods=["POST"])
 def process_speech():
     """Handle caller response, book slot or ask if they want to repeat"""
     user_text = request.form.get("SpeechResult", "")
