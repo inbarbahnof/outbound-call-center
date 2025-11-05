@@ -23,10 +23,12 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react(path):
-    if path != "" and os.path.exists(os.path.join("build", path)):
-        return send_from_directory("build", path)
+    react_build_dir = os.path.join(os.path.dirname(__file__), "call-center", "build")
+
+    if path != "" and os.path.exists(os.path.join(react_build_dir, path)):
+        return send_from_directory(react_build_dir, path)
     else:
-        return send_from_directory("build", "index.html")
+        return send_from_directory(react_build_dir, "index.html")
 
 
 @app.route("/make_call", methods=["POST"])

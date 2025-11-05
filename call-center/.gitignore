@@ -8,8 +8,6 @@
 # testing
 /coverage
 
-# production
-/outbound-call-center/build
 
 # misc
 .DS_Store
