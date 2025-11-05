@@ -10,7 +10,7 @@ function App() {
     setStatus("");
 
     try {
-      const response = await fetch("https://outbound-call-center.onrender.com/make_call", {
+      const response = await fetch("/make_call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ number }),
@@ -31,34 +31,37 @@ function App() {
 
   return (
     <div style={{ fontFamily: "sans-serif", textAlign: "center", marginTop: "100px" }}>
-      <h2>AI Call Interface</h2>
-      <input
-        type="text"
-        placeholder="Enter phone number (+972...)"
-        value={number}
-        onChange={(e) => setNumber(e.target.value)}
-        style={{
-          padding: "10px",
-          width: "250px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          marginRight: "10px",
-        }}
-      />
-      <button
-        onClick={handleCall}
-        disabled={loading}
-        style={{
-          padding: "10px 20px",
-          backgroundColor: "#007BFF",
-          color: "white",
-          border: "none",
-          borderRadius: "8px",
-          cursor: "pointer",
-        }}
-      >
-        {loading ? "Calling..." : "Call"}
-      </button>
+      <h1>Call Center</h1>
+
+      <div style={{ margin: "20px 0" }}>
+        <input
+          type="text"
+          placeholder="Enter phone number (+972...)"
+          value={number}
+          onChange={(e) => setNumber(e.target.value)}
+          style={{
+            padding: "10px",
+            width: "250px",
+            borderRadius: "8px",
+            border: "1px solid #ccc",
+            marginRight: "10px",
+          }}
+        />
+        <button
+          onClick={handleCall}
+          disabled={loading}
+          style={{
+            padding: "10px 20px",
+            backgroundColor: "#007BFF",
+            color: "white",
+            border: "none",
+            borderRadius: "8px",
+            cursor: "pointer",
+          }}
+        >
+          {loading ? "Calling..." : "Call"}
+        </button>
+      </div>
 
       {status && <p style={{ marginTop: "20px" }}>{status}</p>}
     </div>
