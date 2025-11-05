@@ -68,34 +68,44 @@ def voice():
 
     for i, s in enumerate(options, start=1):
         slot_msg += f"Option {i}: {format_slot(s)}. "
-    slot_msg += "Please say the option number you prefer."
+    slot_msg += "Please say the option number or press the corresponding number on your keypad."
 
     resp.say(slot_msg, voice="Polly.Amy")
-    resp.gather(input="speech", action="/process_speech", timeout=5)
+
+    # Gather both speech and DTMF input
+    resp.gather(
+        input="speech dtmf",   # <-- allow both speech and keypad
+        num_digits=1,          # only first digit from keypad
+        action="/process_speech",  # endpoint that handles both
+        timeout=5
+    )
+
     return Response(str(resp), mimetype="text/xml")
 
 
-@app.route("/process_speech", methods=["POST"])
 def process_speech():
     """Handle caller response, book slot or ask if they want to repeat"""
     user_text = request.form.get("SpeechResult", "")
+    digits = request.form.get("Digits", "")
     caller_number = request.form.get("From", "")
-    print(f"Caller said: {user_text}")
+    print(f"Caller said: {user_text} / pressed: {digits}")
 
     resp = VoiceResponse()
-    option = parse_option(user_text)
+
+    # Use DTMF if available, else speech
+    if digits:
+        try:
+            option = int(digits)
+        except ValueError:
+            option = None
+    else:
+        option = parse_option(user_text)
 
     if option is None:
-        # Not understood → ask for keypad input instead of speech
         resp.say("Sorry, I didn’t catch that.", voice="Polly.Amy")
-        resp.say("If you’d like me to repeat the available options, please press 1.", voice="Polly.Amy")
-
-        gather = resp.gather(
-            input="dtmf",
-            num_digits=1,
-            action="/handle_repeat",
-            timeout=3
-        )
+        resp.say("If you’d like me to repeat the available options, please press 1.",
+                 voice="Polly.Amy")
+        resp.gather(input="dtmf", num_digits=1, action="/handle_repeat", timeout=3)
         return Response(str(resp), mimetype="text/xml")
 
     # --- Valid option ---
@@ -106,7 +116,7 @@ def process_speech():
         resp.say(f"Great! You’re booked for {chosen_slot}. See you then!", voice="Polly.Amy")
     else:
         resp.say("Sorry, that slot is no longer available. Please try again.", voice="Polly.Amy")
-        resp.gather(input="speech", action="/process_speech", timeout=5)
+        resp.gather(input="speech dtmf", action="/process_speech", timeout=5)
 
     return Response(str(resp), mimetype="text/xml")
 
