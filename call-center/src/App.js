@@ -10,7 +10,7 @@ function App() {
     setStatus("");
 
     try {
-      const response = await fetch("https://your-render-backend.onrender.com/make_call", {
+      const response = await fetch("https://outbound-call-center.onrender.com/make_call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ number }), // 👈 only send number
