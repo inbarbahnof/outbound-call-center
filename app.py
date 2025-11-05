@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, Response
+from flask import Flask, request, Response, jsonify
 from twilio.twiml.voice_response import VoiceResponse
 import re
 from word2number import w2n
@@ -7,6 +7,7 @@ from openai import OpenAI
 from dotenv import load_dotenv
 from datetime import datetime
 import my_calendar
+from call import make_call
 
 app = Flask(__name__)
 
@@ -19,6 +20,21 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 # ---- Flask endpoints ---- #
+@app.route("/make_call", methods=["POST"])
+def make_call_endpoint():
+    data = request.get_json()
+    number = data.get("number")
+
+    if not number:
+        return jsonify({"error": "Missing phone number"}), 400
+
+    try:
+        make_call(number)
+        return jsonify({"status": "success", "message": f"Call started to {number}."})
+    except Exception as e:
+        print("Error making call:", e)
+        return jsonify({"status": "error", "error": str(e)}), 500
+
 
 @app.route("/voice", methods=["POST"])
 def voice():

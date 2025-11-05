@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 from urllib.parse import quote
 import os
 
+message = "Hi! This is Inbar’s AI assistant. Are you available for a quick meeting tomorrow?"
+
 # ----------------------------
 # Load environment variables
 # ----------------------------
@@ -23,7 +25,7 @@ twilio_client = Client(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 # ----------------------------
 # Call functions
 # ----------------------------
-def make_call(to_number, message):
+def make_call(to_number, message=message):
     """Make an outbound call to `to_number` with a message"""
     encoded_message = quote(message)  # URL-encode special characters
     call = twilio_client.calls.create(
@@ -41,7 +43,6 @@ def call_leads(numbers, message):
 
 if __name__ == "__main__":
     leads = ["+972 54 943 1226"]  # Replace with your test numbers
-    message = "Hi! This is Inbar’s AI assistant. Are you available for a quick meeting tomorrow?"
 
     # Call all leads
     call_leads(leads, message)
