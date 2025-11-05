@@ -18,6 +18,6 @@ This project is an AI-powered outbound call system with a simple web interface b
 
 If I had more time, I would:
 
-1. **Validate user input** to ensure proper phone numbers before making a call.
-2. Allow **calling multiple numbers at once**.
-3. Integrate a **real calendar system** and automatically send a Google Calendar invitation to the person the AI called, and track the available slots.
+1. Integrate a **real calendar system** and automatically send a Google Calendar invitation to the person the AI called, and track the available slots.
+2. 2. Allow **calling multiple numbers at once**.
+3. **Validate user input** to ensure proper phone numbers before making a call.
