@@ -15,7 +15,7 @@ app = Flask(__name__, static_folder=REACT_BUILD_DIR)
 
 load_dotenv()
 
-is_start = True
+call_greeting_done = {}
 
 # OpenAI client
 openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -50,21 +50,23 @@ def make_call_endpoint():
 @app.route("/voice", methods=["POST"])
 def voice():
     """Initial call greeting and offer slots"""
-    global is_start
-
     resp = VoiceResponse()
     slots = my_calendar.get_available_slots()
     if not slots:
         resp.say("Sorry, no slots are available at the moment.", voice="Polly.Amy")
         return Response(str(resp), mimetype="text/xml")
 
+    call_sid = request.form.get("CallSid", None)
+
     # Offer first 3 slots
     options = slots[:3]
     slot_msg = ""
 
-    if is_start:
+    greeted = call_greeting_done.get(call_sid, False)
+
+    if not greeted:
         slot_msg += "Hi! This is Inbar's AI assistant. Here are the available slots. "
-        is_start = False
+        call_greeting_done[call_sid] = True
 
     for i, s in enumerate(options, start=1):
         slot_msg += f"Option {i}: {format_slot(s)}. "
