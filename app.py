@@ -1,5 +1,5 @@
 import os
-from flask import Flask, request, Response, jsonify
+from flask import Flask, request, Response, jsonify, send_from_directory
 from twilio.twiml.voice_response import VoiceResponse
 import re
 from word2number import w2n
@@ -20,6 +20,15 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 
 # ---- Flask endpoints ---- #
+@app.route("/", defaults={"path": ""})
+@app.route("/<path:path>")
+def serve_react(path):
+    if path != "" and os.path.exists(os.path.join("build", path)):
+        return send_from_directory("build", path)
+    else:
+        return send_from_directory("build", "index.html")
+
+
 @app.route("/make_call", methods=["POST"])
 def make_call_endpoint():
     data = request.get_json()

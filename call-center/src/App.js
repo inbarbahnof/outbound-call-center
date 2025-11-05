@@ -13,7 +13,7 @@ function App() {
       const response = await fetch("https://outbound-call-center.onrender.com/make_call", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ number }), // 👈 only send number
+        body: JSON.stringify({ number }),
       });
 
       const result = await response.json();
