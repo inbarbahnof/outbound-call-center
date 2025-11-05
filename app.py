@@ -9,7 +9,9 @@ from datetime import datetime
 import my_calendar
 from call import make_call
 
-app = Flask(__name__)
+REACT_BUILD_DIR = os.path.join(os.path.dirname(__file__), "call-center", "build")
+
+app = Flask(__name__, static_folder=REACT_BUILD_DIR)
 
 load_dotenv()
 
@@ -23,12 +25,10 @@ openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 @app.route("/", defaults={"path": ""})
 @app.route("/<path:path>")
 def serve_react(path):
-    react_build_dir = os.path.join(os.path.dirname(__file__), "call-center", "build")
-
-    if path != "" and os.path.exists(os.path.join(react_build_dir, path)):
-        return send_from_directory(react_build_dir, path)
+    if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+        return send_from_directory(app.static_folder, path)
     else:
-        return send_from_directory(react_build_dir, "index.html")
+        return send_from_directory(app.static_folder, "index.html")
 
 
 @app.route("/make_call", methods=["POST"])
